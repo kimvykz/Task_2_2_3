@@ -7,7 +7,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import web.model.User;
 import web.service.UserService;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -27,17 +26,10 @@ public class UserController {
     @Autowired
     private ApplicationContext applicationContext;
 
-
-
     @GetMapping(value="/user")
     public String getUserForm(Model model) {
 
         UserService userService = applicationContext.getBean(UserService.class);
-
-        //userService.add(new User("name5", "secname5", "email5@mail.com"));
-//        User userModTest = userService.findUserById(59L);
-//        userModTest.setLastName("mazafaka");
-//        userService.modify(userModTest);
         List<User> listUsers = userService.listUsers();
         if (listUsers.size() == 0){
             addIfEmpty.stream().forEach(t-> userService.add(t));
@@ -74,7 +66,6 @@ public class UserController {
         applicationContext.getBean(UserService.class).modify(user);
         return "redirect:/user";
     }
-
 
     @GetMapping(value="/delete")
     public String deleteUser(@RequestParam Long id){
