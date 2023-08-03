@@ -23,13 +23,17 @@ public class UserController {
             new User("Sergey", "Fedorov","serega374@gmail.com")
     ));
 
+
+    private UserService userService;
+
     @Autowired
-    private ApplicationContext applicationContext;
+    public void setUserService(UserService userService){
+        this.userService = userService;
+    }
 
     @GetMapping(value="/user")
     public String getUserForm(Model model) {
 
-        UserService userService = applicationContext.getBean(UserService.class);
         List<User> listUsers = userService.listUsers();
         if (listUsers.size() == 0){
             addIfEmpty.stream().forEach(t-> userService.add(t));
@@ -49,13 +53,13 @@ public class UserController {
 
     @RequestMapping(value="/save", method = RequestMethod.POST)
     public String saveUser(@ModelAttribute("newuser") User newuser){
-        applicationContext.getBean(UserService.class).add(newuser);
+        userService.add(newuser);
         return "redirect:/user";
     }
 
     @GetMapping(value="/modify")
     public String modifyUser(@RequestParam Long id, Map<String, Object> model){
-        User userForMod = applicationContext.getBean(UserService.class).findUserById(id);
+        User userForMod = userService.findUserById(id);
         model.put("userForMod", userForMod);
         return "user_modify";
     }
@@ -63,13 +67,12 @@ public class UserController {
     @RequestMapping(value="/update", method = RequestMethod.POST)
     public String updateUser(@ModelAttribute("userForMod") User user){
 
-        applicationContext.getBean(UserService.class).modify(user);
+        userService.modify(user);
         return "redirect:/user";
     }
 
     @GetMapping(value="/delete")
     public String deleteUser(@RequestParam Long id){
-        UserService userService = applicationContext.getBean(UserService.class);
         User userForDel = userService.findUserById(id);
         userService.remove(userForDel);
         return "redirect:/user";

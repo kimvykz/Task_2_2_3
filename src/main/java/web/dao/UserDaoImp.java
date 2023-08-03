@@ -12,11 +12,9 @@ public class UserDaoImp implements UserDao{
     @PersistenceContext
     private EntityManager entityManager;
 
-
     @Override
     public void add(User user) {
         entityManager.persist(user);
-
     }
 
     @Override
@@ -32,13 +30,12 @@ public class UserDaoImp implements UserDao{
 
     @Override
     public List<User> listUsers() {
-        List<User> res = entityManager.createQuery("from User u").getResultList();
-        return res;
+        return entityManager.createQuery("from User u").getResultList();
     }
 
     @Override
     public User findUserById(Long id) {
-        User user = entityManager.find(User.class, id);
-        return user;
+
+        return entityManager.find(User.class, id);
     }
 }
